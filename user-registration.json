@@ -1,0 +1,554 @@
+[
+    {
+        "id": "983b6ac517b57a3d",
+        "type": "tab",
+        "label": "HealthCheck",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "479e84300298cfa4",
+        "type": "tab",
+        "label": "GetUser",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ed350134a5e5b4a5",
+        "type": "tab",
+        "label": "CreateUser",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5c88ce816ea858ab",
+        "type": "tab",
+        "label": "DeleteUser",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "1e942d68540af1e6",
+        "type": "wshlog-config",
+        "configname": "ok1",
+        "logto": "file",
+        "logname": "localhost_ok.log",
+        "logdir": "logs"
+    },
+    {
+        "id": "006f22c4f45301dd",
+        "type": "wshlog-config",
+        "configname": "err1",
+        "logto": "file",
+        "logname": "localhost-err.log",
+        "logdir": "logs"
+    },
+    {
+        "id": "a4ced9a97c4d7f87",
+        "type": "w-config",
+        "configname": "wn-cfg1",
+        "logto": "file",
+        "logname": "file1.log",
+        "logdir": "/logs"
+    },
+    {
+        "id": "ee0cf745bf5f601e",
+        "type": "function",
+        "z": "983b6ac517b57a3d",
+        "name": "health-check-process-req",
+        "func": "msg.payload={ ok: true, msg: \"user registraion health check\"}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 200,
+        "wires": [
+            [
+                "c07cac3a12064b00"
+            ]
+        ]
+    },
+    {
+        "id": "b455ed7cc4bd6233",
+        "type": "http in",
+        "z": "983b6ac517b57a3d",
+        "name": "health-check-req",
+        "url": "/health",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 360,
+        "y": 200,
+        "wires": [
+            [
+                "ee0cf745bf5f601e"
+            ]
+        ]
+    },
+    {
+        "id": "c07cac3a12064b00",
+        "type": "http response",
+        "z": "983b6ac517b57a3d",
+        "name": "health-check-response",
+        "statusCode": "200",
+        "headers": {},
+        "x": 990,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "a219a027f434b5fd",
+        "type": "w-node",
+        "z": "983b6ac517b57a3d",
+        "name": "",
+        "loglabel": "",
+        "loglevel": "INFO",
+        "configname": "a4ced9a97c4d7f87",
+        "x": 720,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f22db2b56ca78be9",
+        "type": "http in",
+        "z": "479e84300298cfa4",
+        "name": "get-user-req",
+        "url": "/user",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "523a0815ea503ae2",
+                "a387ac765e95b043"
+            ]
+        ]
+    },
+    {
+        "id": "4e44139ccf447376",
+        "type": "http response",
+        "z": "479e84300298cfa4",
+        "name": "get-user-res-ok",
+        "statusCode": "",
+        "headers": {},
+        "x": 1200,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "080dde068e615c61",
+        "type": "function",
+        "z": "479e84300298cfa4",
+        "name": "get-user-process-req",
+        "func": "var req_prm = msg.req.query \nvar errmsg={}\nif ( !req_prm.hasOwnProperty('id') ){\n    errmsg = {\n        errcode: \"ValidationError\", \n        message: \"Propery [id] is missing\"\n    }    \n    msg.payload = errmsg    \n    node.error(\"Propery [id]  is missing\", msg)\n} else if (parseInt(req_prm.id) < 100 || parseInt(req_prm.id)>200){\n    errmsg = {\n        errcode: \"ValueRangeError\",\n        errmessage: \"Propery [id]  must be between 100 and 200\"\n    }\n    msg.payload = errmsg\n    node.error(\"Propery [id]   must be between 100 and 200\", msg)\n\n} else {\n    msg.payload={\n        id: req_prm.id,\n        fullname: \"Petro Petrenko\",\n        phone: \"222-33-44\"\n    }\n    return msg;\n}\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 140,
+        "wires": [
+            [
+                "b08d3da00060c074",
+                "8fbccba3bd55d9a9"
+            ]
+        ]
+    },
+    {
+        "id": "a6a6eaa79d504e25",
+        "type": "function",
+        "z": "479e84300298cfa4",
+        "name": "get-user-process-err",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 320,
+        "wires": [
+            [
+                "143109f616fbb0dc",
+                "dfd92199d1dfffeb"
+            ]
+        ]
+    },
+    {
+        "id": "4d019fafc2b9d9c9",
+        "type": "http response",
+        "z": "479e84300298cfa4",
+        "name": "get-user-rec-err",
+        "statusCode": "422",
+        "headers": {},
+        "x": 1220,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "09919a2297dc9442",
+        "type": "catch",
+        "z": "479e84300298cfa4",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 320,
+        "y": 320,
+        "wires": [
+            [
+                "a959e60770b20acc",
+                "298e1161f333deeb"
+            ]
+        ]
+    },
+    {
+        "id": "8fbccba3bd55d9a9",
+        "type": "debug",
+        "z": "479e84300298cfa4",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "143109f616fbb0dc",
+        "type": "debug",
+        "z": "479e84300298cfa4",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "5bcd84d7ef6192ca",
+        "type": "debug",
+        "z": "479e84300298cfa4",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "a959e60770b20acc",
+        "type": "debug",
+        "z": "479e84300298cfa4",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 440,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "b08d3da00060c074",
+        "type": "wshlog-node",
+        "z": "479e84300298cfa4",
+        "name": "LogResponse",
+        "loglabel": "GET-USER",
+        "loglevel": "INFO",
+        "configname": "1e942d68540af1e6",
+        "x": 920,
+        "y": 140,
+        "wires": [
+            [
+                "4e44139ccf447376",
+                "5bcd84d7ef6192ca"
+            ]
+        ]
+    },
+    {
+        "id": "298e1161f333deeb",
+        "type": "wshlog-node",
+        "z": "479e84300298cfa4",
+        "name": "LogError-1",
+        "loglabel": "GET-USER",
+        "loglevel": "ERROR",
+        "configname": "006f22c4f45301dd",
+        "x": 510,
+        "y": 320,
+        "wires": [
+            [
+                "a6a6eaa79d504e25"
+            ]
+        ]
+    },
+    {
+        "id": "dfd92199d1dfffeb",
+        "type": "wshlog-node",
+        "z": "479e84300298cfa4",
+        "name": "LogError-2",
+        "loglabel": "GET-USER",
+        "loglevel": "ERROR",
+        "configname": "006f22c4f45301dd",
+        "x": 990,
+        "y": 320,
+        "wires": [
+            [
+                "4d019fafc2b9d9c9"
+            ]
+        ]
+    },
+    {
+        "id": "523a0815ea503ae2",
+        "type": "wshlog-node",
+        "z": "479e84300298cfa4",
+        "name": "LogRequest",
+        "loglabel": "InReq",
+        "loglevel": "INFO",
+        "configname": "1e942d68540af1e6",
+        "x": 350,
+        "y": 120,
+        "wires": [
+            [
+                "080dde068e615c61"
+            ]
+        ]
+    },
+    {
+        "id": "a387ac765e95b043",
+        "type": "debug",
+        "z": "479e84300298cfa4",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 280,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "2f8e99faaa9eb085",
+        "type": "catch",
+        "z": "ed350134a5e5b4a5",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 420,
+        "y": 280,
+        "wires": [
+            [
+                "a5f64b1ecfd3cbca"
+            ]
+        ]
+    },
+    {
+        "id": "4b5bd9bc139899b1",
+        "type": "function",
+        "z": "ed350134a5e5b4a5",
+        "name": "crt-user-process",
+        "func": "var respmsg = {}\nvar errmsg = {}\nnode.warn(\"Prepare\")\nif (!msg.payload.hasOwnProperty('username')){    \n    errmsg = { errcode: \"ValidationError\", \n               message: \"Propery [username] missing\"}\n    msg.payload = errmsg\n    node.error(\"Propery [username] missing\", msg)\n} else if (!msg.payload.hasOwnProperty('fullname')){\n    errmsg = { errcode: \"ValidationError\", message: \"Propery [username] missing\" }\n    msg.payload = errmsg\n    node.error(\"Propery [fullname] missing\", errmsg)\n} else if (!msg.payload.hasOwnProperty('phone')) {\n    errmsg = { errcode: \"ValidationError\", message: \"Propery [username] missing\" }\n    msg.payload = errmsg \n    node.error(\"Propery [phone] missing\", errmsg)\n} else {\n    respmsg={   \"user_params\": msg.payload,                 \n                \"user_id\" : \"151\" ,\n                \"ok\": true\n            };\n    msg.payload=respmsg;\n    return msg;\n}\nreturn null",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 180,
+        "wires": [
+            [
+                "199a8313a3fce543"
+            ]
+        ]
+    },
+    {
+        "id": "a5f64b1ecfd3cbca",
+        "type": "function",
+        "z": "ed350134a5e5b4a5",
+        "name": "crt-user-err",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 280,
+        "wires": [
+            [
+                "22678a9460994b87"
+            ]
+        ]
+    },
+    {
+        "id": "32c98eb8225c490a",
+        "type": "http in",
+        "z": "ed350134a5e5b4a5",
+        "name": "crt-user-req",
+        "url": "/user",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 390,
+        "y": 180,
+        "wires": [
+            [
+                "4b5bd9bc139899b1"
+            ]
+        ]
+    },
+    {
+        "id": "199a8313a3fce543",
+        "type": "http response",
+        "z": "ed350134a5e5b4a5",
+        "name": "crt-user-rec-ok",
+        "statusCode": "200",
+        "headers": {},
+        "x": 1080,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "22678a9460994b87",
+        "type": "http response",
+        "z": "ed350134a5e5b4a5",
+        "name": "crt-user-rec-err",
+        "statusCode": "422",
+        "headers": {},
+        "x": 1080,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "7b4cd4492c00a965",
+        "type": "comment",
+        "z": "ed350134a5e5b4a5",
+        "name": "flows-decription",
+        "info": "# Description\nThis is simple flows to test development and deployment process\n\n# Devloped API\n\n## resource name: \"/user\" has a few method  (and a few flows) which emulates create, get and delete user in some system\n\n### **Create user http: post, path /user**\n\n- Request: \n\n```\n{\"username\": \"user1\",\n \"fullname\": \"piter buter\",\n\"phone\": \"222-33-44\"\n}\n```\n\n- Response:\n\n```\n{\n  \"user_params\": {\n    \"username\": \"user1\",\n    \"fullname\": \"piter buter\",\n    \"phone\": \"222-33-44\"\n  },\n  \"user_id\": \"151\",\n  \"ok\": true\n}\n```\n### **Get user by id http: get, path /user**\n\n- Request: \n\nRequest as a parameter in url\n\n```\n/user?id=199\n```\n\n- Response:\n\n```json\n{\"id\":\"199\",\"fullname\":\"Petro Petrenko\",\"phone\":\"222-33-44\"}\n```\n\n### **Delete user by id http: delete, path /user**\n\n- Request: \n\nRequest as a parameter in url\n\n```\n/user?id=199\n```\n\n- Response:\n\n```json\n{\n  \"ok\": true,\n  \"id\": \"199\",\n  \"message\": \"user deleted\"\n}\n```\n\n",
+        "x": 520,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "3ad3d8e6baad36e9",
+        "type": "http in",
+        "z": "5c88ce816ea858ab",
+        "name": "del-user-req",
+        "url": "/user",
+        "method": "delete",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 210,
+        "y": 220,
+        "wires": [
+            [
+                "273eae0441f6b787"
+            ]
+        ]
+    },
+    {
+        "id": "e7b9b2c734a48da5",
+        "type": "http response",
+        "z": "5c88ce816ea858ab",
+        "name": "del-user-res-ok",
+        "statusCode": "",
+        "headers": {},
+        "x": 760,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "273eae0441f6b787",
+        "type": "function",
+        "z": "5c88ce816ea858ab",
+        "name": "del-user-process-req",
+        "func": "var req_prm = msg.req.query \nvar errmsg={}\nif ( !req_prm.hasOwnProperty('id') ){\n    errmsg = {\n        errcode: \"ValidationError\", \n        message: \"Propery [id] is missing\"\n    }    \n    msg.payload = errmsg    \n    node.error(\"Propery [id]  is missing\", msg)\n} else if (parseInt(req_prm.id) < 100 || parseInt(req_prm.id)>200){\n    errmsg = {\n        errcode: \"ValueRangeError\",\n        message: \"Propery [id]  must be between 100 and 200\"\n    }\n    msg.payload = errmsg\n    node.error(\"Propery [id]   must be between 100 and 200\", msg)\n\n} else {\n    msg.payload={\n        ok: true,\n        id: req_prm.id,\n        message: \"user deleted\"\n\n    }\n    return msg;\n}\nreturn null;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 220,
+        "wires": [
+            [
+                "e7b9b2c734a48da5"
+            ]
+        ]
+    },
+    {
+        "id": "edd910ef5e296d47",
+        "type": "function",
+        "z": "5c88ce816ea858ab",
+        "name": "del-user-process-err",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 360,
+        "wires": [
+            [
+                "2d68f28c2c39e940"
+            ]
+        ]
+    },
+    {
+        "id": "2d68f28c2c39e940",
+        "type": "http response",
+        "z": "5c88ce816ea858ab",
+        "name": "del-user-rec-err",
+        "statusCode": "422",
+        "headers": {},
+        "x": 840,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "bff637df68a8ab69",
+        "type": "catch",
+        "z": "5c88ce816ea858ab",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 360,
+        "y": 360,
+        "wires": [
+            [
+                "edd910ef5e296d47"
+            ]
+        ]
+    }
+]

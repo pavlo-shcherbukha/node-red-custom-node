@@ -1,0 +1,102 @@
+﻿<script type="text/javascript">
+	RED.nodes.registerType('w-config',{
+
+		category: 'config',
+
+		defaults: {
+            configname: {value:"", required:true},
+            logto: {value:"",required:true},            
+			logname: {value:"",required:false},
+			logdir: {value:"",required:false},
+		},
+
+		label: function() {
+			return this.configname
+		},
+
+		oneditprepare: function() {
+            $("#node-config-input-logto").change(function() {
+      			if ($(this).val() === "file") {
+                    $("#node-config-fileprop").show()
+      			} else {
+                    $("#node-config-fileprop").hide()  
+                }
+
+		    })
+		},
+
+		oneditsave: function() {
+		}
+	})
+</script>
+
+<script type="text/x-red" data-template-name="w-config">
+    <div class="form-row">
+        <label for="node-config-input-configname"><i class="fa fa-tag"></i>Config name</label>
+        <input type="text" id="node-config-input-configname" placeholder="Config name">
+    </div>
+    <div class="form-row">
+		<label for="node-config-input-logto"><i class="fa fa-clock-o"></i> Log to</label>
+		<select type="text" id="node-config-input-logto" placeholder="Log to">
+			<option value="file">to File</option>
+			<option value="console">to console</option>
+		</select>
+	</div>
+    <div id="node-config-fileprop">
+        <div id="node-config-input-logname-f" class="form-row">
+            <label for="node-config-input-logname"><i class="fa fa-tag"></i> Log file name</label>
+            <input type="text" id="node-config-input-logname" placeholder="Log file name">
+        </div>
+        <div id="node-config-input-logdir-f" class="form-row">
+            <label for="node-config-input-logdir"><i class="fa fa-tag"></i> Log dir</label>
+            <input type="text" id="node-config-input-logdir" placeholder="Log dir">
+        </div>
+    </div>    
+
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('w-node',{
+        category: 'output',
+        color: '#FFAAAA',
+        icon: "file.png",
+        defaults: {
+            name: {value:""},
+            loglabel: {value:"",required:true},
+            loglevel: {value:"INFO", required: true},
+            configname: {type:"w-config"},
+        },
+        inputs:1,
+        outputs:1,
+        label: function() {
+            return this.name||"w-node";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="w-node">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-loglabel"><i class="fa fa-tag"></i>Log Label</label>
+        <input type="text" id="node-input-loglabel" placeholder="LogLabel">
+    </div>
+	<div class="form-row">
+		<label for="node-input-loglevel"><i class="fa fa-exclamation"></i> Level</label>
+		<select type="text" id="node-input-loglevel" placeholder="Log Level">
+			<option value="ERROR">ERROR</option>
+			<option value="WARN">WARN</option>
+			<option value="INFO">INFO</option>
+			<option value="DEBUG">DEBUG</option>
+			<option value="TRACE">TRACE</option>
+		</select>
+	</div>
+    <div class="form-row">
+		<label for="node-input-configname"><i class="fa fa-cogs"></i> Log Config</label>
+		<input type="text" id="node-input-configname" placeholder="Log Configuration">
+	</div>
+
+   
+</script>

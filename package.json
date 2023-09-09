@@ -1,0 +1,20 @@
+{
+  "name": "node-red-test01",
+  "version": "1.0.0",
+  "description": "testing nodre red development and deployment on openshift",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node  node_modules/node-red/red.js --settings ./dev/settings.js --userDir .  --port 1880 --verbose user-registration.json",
+    "test": "node  node_modules/node-red/red.js --settings ./test/settings.js --userDir .  --port 8080 --verbose user-registration.json",
+    "devloader": "node  node_modules/node-red/red.js --settings ./dev/settings.js --userDir .  --port 1880 --verbose loader.json",
+    "testloader": "node  node_modules/node-red/red.js --settings ./test/settings.js --userDir .  --port 8080 --verbose loader.json",
+    "start": "node  node_modules/node-red/red.js --settings ./prod/settings.js --userDir . --verbose --port 8080 $FLOW_NAME"
+  },
+  "author": "psh",
+  "license": "ISC",
+  "dependencies": {
+    "node-red": "^3.0.2",
+    "wnode": "file:wnode",
+    "wshlog": "file:wshlog"
+  }
+}

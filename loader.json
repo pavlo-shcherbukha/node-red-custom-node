@@ -1,0 +1,300 @@
+[
+    {
+        "id": "bbb1d033d29ef80e",
+        "type": "tab",
+        "label": "load-create-user",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4c04eeab1770c33c",
+        "type": "tab",
+        "label": "load-get-user",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e9c4e2c510fb3a57",
+        "type": "tab",
+        "label": "load-delete-user",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "80c8e46717e02bbf",
+        "type": "inject",
+        "z": "bbb1d033d29ef80e",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 230,
+        "y": 180,
+        "wires": [
+            [
+                "2dd71a6ea518274a"
+            ]
+        ]
+    },
+    {
+        "id": "2dd71a6ea518274a",
+        "type": "function",
+        "z": "bbb1d033d29ef80e",
+        "name": "send-req",
+        "func": "var req_url = env.get(\"URL_CRTUSR\");\nif (typeof req_url === \"undefined\" ){\n    req_url=\"http://localhost:8080/user\"\n}\nnode.warn('POST URL:' + req_url)\n\nmsg.url = req_url;\nmsg.payload={\n    \"username\": \"user1\",\n    \"fullname\": \"piter buter\",\n    \"phone\": \"222-33-44\"\n}\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 180,
+        "wires": [
+            [
+                "72722d440c4a01f7"
+            ]
+        ]
+    },
+    {
+        "id": "72722d440c4a01f7",
+        "type": "http request",
+        "z": "bbb1d033d29ef80e",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "Content-Type",
+                "valueType": "other",
+                "valueValue": "application/json"
+            }
+        ],
+        "x": 650,
+        "y": 180,
+        "wires": [
+            [
+                "32330950ddf83246"
+            ]
+        ]
+    },
+    {
+        "id": "32330950ddf83246",
+        "type": "function",
+        "z": "bbb1d033d29ef80e",
+        "name": "get-rec",
+        "func": "node.warn('відповідь ' + JSON.stringify( msg.payload) )\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "66c405fb40b6d960",
+        "type": "function",
+        "z": "4c04eeab1770c33c",
+        "name": "send-req",
+        "func": "\nvar req_url = env.get(\"URL_CRTUSR\");\nif (typeof req_url === \"undefined\") {\n   req_url = \"http://localhost:8080/user\"\n    //req_url =\"http://user-reg-srvc-pashakx-dev.apps.sandbox-m2.ll9k.p1.openshiftapps.com/user\"\n}\nnode.warn('GET URL:' + req_url )\n\nvar d= new Date();\nvar seconds = d.getSeconds(); \n\nmsg.url = req_url + \"?id=\" +seconds*4;\n\nmsg.payload = null\n\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 180,
+        "wires": [
+            [
+                "8eca581fd2dda788"
+            ]
+        ]
+    },
+    {
+        "id": "75a61577728e574a",
+        "type": "function",
+        "z": "4c04eeab1770c33c",
+        "name": "proc-res",
+        "func": "node.warn('відповідь ' + JSON.stringify(msg.payload))\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8eca581fd2dda788",
+        "type": "http request",
+        "z": "4c04eeab1770c33c",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 570,
+        "y": 180,
+        "wires": [
+            [
+                "75a61577728e574a"
+            ]
+        ]
+    },
+    {
+        "id": "d7132ba471e32ec4",
+        "type": "inject",
+        "z": "4c04eeab1770c33c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 180,
+        "wires": [
+            [
+                "66c405fb40b6d960"
+            ]
+        ]
+    },
+    {
+        "id": "c5095ec94e99645b",
+        "type": "function",
+        "z": "e9c4e2c510fb3a57",
+        "name": "send-req",
+        "func": "var req_url = env.get(\"URL_CRTUSR\");\nif (typeof req_url === \"undefined\") {\n    req_url = \"http://localhost:8080/user\"\n}\nnode.warn('DEL URL:' + req_url)\n\nvar d= new Date();\nvar seconds = d.getSeconds(); \n\nmsg.url = req_url + \"?id=\" + seconds*4;\n\n//msg.payload = null\n\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 160,
+        "wires": [
+            [
+                "85ccbe6de874bace"
+            ]
+        ]
+    },
+    {
+        "id": "3f4197c42977dad5",
+        "type": "function",
+        "z": "e9c4e2c510fb3a57",
+        "name": "proc-res",
+        "func": "node.warn('відповідь ' + JSON.stringify(msg.payload))\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "85ccbe6de874bace",
+        "type": "http request",
+        "z": "e9c4e2c510fb3a57",
+        "name": "",
+        "method": "DELETE",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 590,
+        "y": 160,
+        "wires": [
+            [
+                "3f4197c42977dad5"
+            ]
+        ]
+    },
+    {
+        "id": "5dee0cdd61ff8853",
+        "type": "inject",
+        "z": "e9c4e2c510fb3a57",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 190,
+        "y": 160,
+        "wires": [
+            [
+                "c5095ec94e99645b"
+            ]
+        ]
+    }
+]

@@ -1,0 +1,19 @@
+{
+  "name": "wnode",
+  "version": "1.0.0",
+  "description": "wnode-тестова custom node (demo)",
+  "main": "wnode.js",
+  "scripts": {
+    "test": "test"
+  },
+  "node-red": {
+    "nodes": {
+      "wnode": "wnode.js"
+    }
+  },
+  "author": "pasha",
+  "license": "ISC",
+  "dependencies": {
+    "winston": "^3.10.0"
+  }
+}
