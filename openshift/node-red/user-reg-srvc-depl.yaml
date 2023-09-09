@@ -1,0 +1,143 @@
+apiVersion: v1
+items:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    labels:
+      app: node-red-test
+      app.kubernetes.io/part-of: node-red-test
+    name: user-reg-srvc
+  spec:
+    lookupPolicy:
+      local: false
+  status:
+    dockerImageRepository: ""
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      app: node-red-test
+      app.kubernetes.io/part-of: node-red-test
+    name: user-reg-srvc
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: user-reg-srvc:latest
+    source:
+      contextDir: /
+      git:
+        ref: master
+        uri: https://github.com/pavlo-shcherbukha/node-red-in-openshift.git
+      sourceSecret:
+        name: psh-gihtub
+      type: Git
+    strategy:
+      dockerStrategy:
+        dockerfilePath: ./Dockerfile
+        env:
+        - name: GIT_USER
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: psh-gihtub
+        - name: GIT_PSW
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: psh-gihtub
+        - name: GIT_BRANCH
+          value: master
+        - name: GIT_URL
+          value: https://github.com/pavlo-shcherbukha/node-red-in-openshift.git
+      type: Docker
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: node-red-test
+      app.kubernetes.io/part-of: node-red-test
+    name: user-reg-srvc
+    namespace: pashakx-dev
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      app: user-reg-srvc
+      deploymentconfig: user-reg-srvc
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: user-reg-srvc
+          deploymentconfig: user-reg-srvc
+      spec:
+        containers:
+        - env:
+          - name: NODE_ENV
+            value: production
+          - name: DEV_MODE
+            value: "false"
+          - name: NPM_RUN
+            value: start
+          - name: NODE_RED_ENABLE_PROJECTS
+            value: "false"
+          - name: NODE_RED_ENABLE_SAFE_MODE
+            value: "false"
+          - name: FLOW_NAME
+            value: ./user-registration.json
+          - name: URL_CRTUSR
+            value: http://user-reg-srvc-${APP_PROJ}.${APP_DNS}
+          imagePullPolicy: Always
+          name: user-reg-srvc
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - user-reg-srvc
+        from:
+          kind: ImageStreamTag
+          name: user-reg-srvc:latest
+          namespace: pashakx-dev
+      type: ImageChange
+    - type: ConfigChange
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: node-red-test
+      app.kubernetes.io/part-of: node-red-test
+    name: user-reg-srvc
+  spec:
+    ports:
+    - name: 8080-tcp
+      nodePort: 0
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: user-reg-srvc
+  status:
+    loadBalancer: {}
+kind: List
+metadata: {}
